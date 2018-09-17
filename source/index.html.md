@@ -4,7 +4,7 @@ title: API Reference
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
   - ruby
-  - python
+  - json
   - javascript
 
 toc_footers:
@@ -19,51 +19,183 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+This document covers documentation and usage of BoomBit's server.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+Administration panel is available here: `http://178.62.237.78`
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Starting Requests
+> Request-example:
 
-# Authentication
-
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```
+"Ap": "1233102938"
+"r": "1234567890123456"
+"auth": "1203nc09cn13cn"
 ```
 
-```python
-import kittn
+*Parameters which always are in requests:*
 
-api = kittn.authorize('meowmeowmeow')
+{String} Ap, App Identificator
+
+{String} r, Random char string that identifies request (16 chars)
+
+{string} auth, String calculated with formula:  md5("a:”+Ap+”:”+r+”:”+AMPWFX_CODE)
+
+## Start Session
+> Response-example:
+
+```json
+{
+  "Ss":true,
+  "Data":{
+    "sessid":"QBLDEEPPHSNAWLMM"
+  }
+}
 ```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+### Parameters:
+*Primary:* -
+
+*Optional:* -
+
+### Response full names:
+{Boolean} Ss, Information if request was done
+
+{String} sessid, Session ID
+
+## Validate Session
+> Request-example:
+
+```
+"sessid": "QBLDEEPPHSNAWLMM"
 ```
 
-```javascript
-const kittn = require('kittn');
+> Response-example:
 
-let api = kittn.authorize('meowmeowmeow');
+```json
+{
+  "Ss":true,
+  "Data":{
+    "active":true
+  }
+}
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+### Parameters:
+*Primary:* -
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+*Optional:* 
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+{String} sessid, Session ID
 
-`Authorization: meowmeowmeow`
+### Response full names:
+{Boolean} Ss, Information if request was done
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+{Boolean} active, Information if session is active
+
+## GetGuestId
+> Request-example:
+
+```
+"Nnam": "ABC"
+"Fs": "ABCD,AJDH,SKBD,SKBC"
+"D": "ABCDHSLFIYDB"
+"AD": ""
+"Co": "Poland"
+"sessid": "QBLDEEPPHSNAWLMM"
+```
+
+> Response-example:
+
+```json
+{
+  "Ss":true,
+  "Data":{
+    "Ulvl":0,
+    "CL": "10",
+    "F": "ABCD,AJDH,SKBD,SKBC",
+    "GId":"g_KNPKCGIC"
+  }
+}
+```
+
+### Parameters:
+*Primary:* -
+
+*Optional:*
+
+{String} Nnam, Nickname
+
+{String} Fs, Friends
+
+{String} D, Push notification (it depends from the platform: if iOS - send: "ABCDHSLFIYDB", if Android - send: "Android:ABCDHSLFIYDB")
+
+{String} AD, Additional Data (any data)
+
+{String} Co, Country
+
+{String} sessid, Session ID
+
+### Response full names:
+{Boolean} Ss, Information if request was done
+
+{Number} Ulvl, User league level
+
+{String} CL, Current League
+
+{String} F, Friends
+
+{String} GId, Guest Id
+
+## Set Player Data
+> Request-example:
+
+```
+"P": "g_KNPKCGIC"
+"Nnam": "ABC"
+"Fs": "ABCD,AJDH,SKBD,SKBC"
+"D": "ABCDHSLFIYDB"
+"AD": ""
+"Co": "Poland"
+"Ulvl": 5
+"sessid": "QBLDEEPPHSNAWLMM"
+```
+
+> Response-example:
+
+```json
+{
+  "Ss":true,
+  "Data":{
+    "Ulvl":5,
+    "CL":"10",
+    "F":"ABCD,AJDH,SKBD,SKBC"
+  }
+}
+```
+
+### Parameters:
+*Primary:*
+
+{String} P, Player Id
+
+*Optional:*
+
+{String} Nnam, Nickname
+
+{String} Fs, Friends
+
+{String} D, Push notification (it depends from the platform: if iOS - send: "ABCDHSLFIYDB", if Android - send: "Android:ABCDHSLFIYDB")
+
+{String} AD, Additional Data (any data)
+
+{String} Co, Country
+
+{Number} Ulvl, User league level
+
+{String} sessid, Session ID
+
+### Response full names:
+
 
 # Kittens
 
